@@ -4,11 +4,12 @@ let config = require("./config");
 let program = require('commander');
 let fs = require("fs");
 let path = require("path");
-let supportFiles = ['png', 'jpg', 'jpeg'];
+let supportFiles = ['.png', '.jpg', '.jpeg'];
 
 tinify.key = config.tinykey;
 if (config.tinykey.length == 0) {
-    console.log("")
+    console.error("请到https://tinypng.com/developers申请key")
+    return;
 }
 
 
@@ -40,6 +41,7 @@ function tinifyDir(dir) {
     fs.readdir(dir, function (err, files) {
         for (let i = 0; i < files.length; i++) {
             let basename = path.basename(files[i]);
+            console.log(tinyPath + "/" + basename);
             tinifyFile(dir + "/" + basename, tinyPath + "/" + basename);
 
         }
@@ -55,6 +57,7 @@ function getTinyDir(path) {
             fs.mkdir(tinyPath);
         }
     });
+    return tinyPath;
 
 }
 program
@@ -63,7 +66,7 @@ program
     .option('-d,--diretctory', "压缩目录，请输入当前目录下的目录名")
     .on('--help', function () {
         console.log("从tinypng.com上压缩图片的工具");
-        console.log("从 https://tinypng.com/developers 上面申请自己的key");
+        console.log("从 https://tinypng.com/developers 上面申请key");
         console.log("一个key一个月只可以压缩500张图片");
 
     })
@@ -71,6 +74,7 @@ program
 
 
 if (program.file) {
+    let file = program.args[0];
     let currentPath = process.cwd();
     let tinyPath = getTinyDir(currentPath);
 
