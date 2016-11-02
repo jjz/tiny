@@ -1,6 +1,38 @@
+#!/usr/bin/env node
 let tinify = require("tinify");
-tinify.key="sj1vka4IToZ1iZeLUT9xe0OMykpzTjFD";
-let source =tinify.fromFile("test.png");
-source.toFile("tiny.png");
+let config = require("./config");
+let program = require('commander');
+let fs =require("fs");
+
+tinify.key = config.tinykey;
+
+function tinifyFile(file, toFile) {
+    let source = tinify.fromFile(file);
+    source.toFile(toFile);
+}
+
+function tinifyDir(dir) {
+
+
+}
+program
+    .version('1.0.0')
+    .option('-f,--file', "compress file")
+    .option('-d,--diretctory', "compress diretcory")
+    .parse(process.argv);
+
+if (program.file) {
+    file = program.args[0];
+    tinifyFile(file, "t_" + file);
+
+}
+if (program.diretctory) {
+    tinifyDir(program.args[0]);
+
+
+}
+
+
+
 
 
