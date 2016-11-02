@@ -11,9 +11,8 @@ function tinifyFile(file, toFile) {
     console.log("tiny", "begin compress " + file);
     let source = tinify.fromFile(file);
     source.toFile(toFile, function (res) {
-        if (res) {
-            console.log("tiny", "end compress " + file);
-        }
+        console.log("tiny", "end compress " + file);
+
     });
 
 }
