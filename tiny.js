@@ -7,10 +7,13 @@ let path = require("path");
 let supportFiles = ['png', 'jpg', 'jpeg'];
 
 tinify.key = config.tinykey;
+if (config.tinykey.length == 0) {
+    console.log("")
+}
 
 
 function tinifyFile(file, toFile) {
-    console.log("tiny", "begin compress " + file);
+    console.log("begin compress " + file);
     let extname = path.extname(file);
     let isImage = false;
     for (let i = 0; i < supportFiles.length; i++) {
@@ -25,7 +28,7 @@ function tinifyFile(file, toFile) {
 
     let source = tinify.fromFile(file);
     source.toFile(toFile, function (res) {
-        console.log("tiny", "end compress " + file);
+        console.log("end compress " + file);
 
     });
 
@@ -33,12 +36,7 @@ function tinifyFile(file, toFile) {
 
 function tinifyDir(dir) {
     let currentPath = process.cwd();
-    let tinyPath = currentPath + "/tiny";
-    fs.exists(tinyPath, function (exists) {
-        if (!exists) {
-            fs.mkdir(tinyPath);
-        }
-    });
+    let tinyPath = getTinyDir(currentPath);
     fs.readdir(dir, function (err, files) {
         for (let i = 0; i < files.length; i++) {
             let basename = path.basename(files[i]);
@@ -47,6 +45,16 @@ function tinifyDir(dir) {
         }
     });
 
+
+}
+function getTinyDir(path) {
+
+    let tinyPath = path + "/tiny";
+    fs.exists(tinyPath, function (exists) {
+        if (!exists) {
+            fs.mkdir(tinyPath);
+        }
+    });
 
 }
 program
@@ -61,9 +69,12 @@ program
     })
     .parse(process.argv);
 
+
 if (program.file) {
-    file = program.args[0];
-    tinifyFile(file, "t_" + file);
+    let currentPath = process.cwd();
+    let tinyPath = getTinyDir(currentPath);
+
+    tinifyFile(file, tinyPath + "/" + file);
 
 }
 if (program.diretctory) {
@@ -71,8 +82,7 @@ if (program.diretctory) {
     if (dir[dir.length - 1] == '/') {
         dir = dir.substring(0, dir.length - 1);
     }
-    console.log("dir", dir);
-    //tinifyDir(dir);
+    tinifyDir(dir);
 
 
 }
