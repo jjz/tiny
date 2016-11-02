@@ -53,7 +53,10 @@ program
     .version('1.0.0')
     .option('-f,--file', "压缩文件，输入当前目录下的完成文件名")
     .option('-d,--diretctory', "压缩目录，请输入当前目录下的目录名")
-    .option('-h,--help', function () {
+    .on('--help', function () {
+        console.log("从tinypng.com上压缩图片的工具");
+        console.log("从 https://tinypng.com/developers 上面申请自己的key");
+        console.log("一个key一个月只可以压缩500张图片");
 
     })
     .parse(process.argv);
